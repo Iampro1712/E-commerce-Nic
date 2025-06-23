@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce API - Documentación Interactiva</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet">
+    <style>
+        .endpoint-card {
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        .method-badge {
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+        .method-GET { background-color: #28a745; }
+        .method-POST { background-color: #007bff; }
+        .method-PUT { background-color: #ffc107; color: #000; }
+        .method-DELETE { background-color: #dc3545; }
+        .response-area {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .auth-token {
+            background-color: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+        .nav-link {
+            padding: 5px 15px;
+            font-size: 0.9em;
+        }
+        .nav-link.active {
+            background-color: #007bff;
+            color: white !important;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">🛒 E-commerce API - Documentación Interactiva</span>
+            <span class="navbar-text">
+                <span id="api-status" class="badge bg-secondary">Verificando...</span>
+            </span>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <div class="auth-token">
+                        <h6>🔑 Token de Autenticación</h6>
+                        <input type="text" id="authToken" class="form-control form-control-sm" placeholder="JWT Token (opcional)">
+                        <small class="text-muted">Se incluirá automáticamente en las peticiones</small>
+                    </div>
+                    
+                    <nav class="nav nav-pills flex-column">
+                        <a class="nav-link active" href="#health">🏥 Health Check</a>
+                        <a class="nav-link" href="#auth">🔐 Autenticación</a>
+                        <a class="nav-link" href="#products">📦 Productos</a>
+                        <a class="nav-link" href="#categories">📂 Categorías</a>
+                        <a class="nav-link" href="#cart">🛒 Carrito</a>
+                        <a class="nav-link" href="#orders">📋 Pedidos</a>
+                        <a class="nav-link" href="#payments">💳 Pagos PayPal</a>
+                        <a class="nav-link" href="#admin">👑 Admin</a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <div class="mb-4">
+                    <h2>🚀 API E-commerce con PayPal</h2>
+                    <p class="text-muted">Documentación interactiva para probar todos los endpoints de la API</p>
+                    <div class="alert alert-info">
+                        <strong>Base URL:</strong> <code id="baseUrl">http://localhost:5000/api</code>
+                        <button class="btn btn-sm btn-outline-primary ms-2" onclick="changeBaseUrl()">Cambiar</button>
+                    </div>
+                </div>
+
+                <!-- Health Check -->
+                <section id="health">
+                    <h3>🏥 Health Check</h3>
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-GET">GET</span>
+                            <code>/health</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Verifica el estado de la API</p>
+                            <button class="btn btn-success" onclick="makeRequest('GET', '/health')">
+                                🚀 Probar Endpoint
+                            </button>
+                            <div id="response-health" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Authentication -->
+                <section id="auth">
+                    <h3>🔐 Autenticación</h3>
+                    
+                    <!-- Register -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/auth/register</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Registrar nuevo usuario</p>
+                            <textarea class="form-control mb-2" id="register-body" rows="6">{
+  "email": "nuevo@ejemplo.com",
+  "password": "MiPassword123",
+  "first_name": "Nuevo",
+  "last_name": "Usuario",
+  "phone": "+505 8888-8888"
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/auth/register', 'register-body')">
+                                📝 Registrar Usuario
+                            </button>
+                            <div id="response-register" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Login -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/auth/login</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Iniciar sesión</p>
+                            <textarea class="form-control mb-2" id="login-body" rows="4">{
+  "email": "admin@test.com",
+  "password": "admin123"
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/auth/login', 'login-body')">
+                                🔑 Iniciar Sesión
+                            </button>
+                            <button class="btn btn-outline-secondary ms-2" onclick="autoSetToken('login')">
+                                🔄 Auto-guardar Token
+                            </button>
+                            <div id="response-login" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Profile -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-GET">GET</span>
+                            <code>/auth/profile</code>
+                            <span class="badge bg-warning text-dark">🔒 Requiere Auth</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Obtener perfil del usuario autenticado</p>
+                            <button class="btn btn-success" onclick="makeRequest('GET', '/auth/profile')">
+                                👤 Ver Perfil
+                            </button>
+                            <div id="response-profile" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Products -->
+                <section id="products">
+                    <h3>📦 Productos</h3>
+                    
+                    <!-- Get Products -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-GET">GET</span>
+                            <code>/products</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Obtener lista de productos con filtros opcionales</p>
+                            <div class="row mb-2">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="product-search" placeholder="Buscar productos (q)">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" id="product-min-price" placeholder="Precio mín">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" id="product-max-price" placeholder="Precio máx">
+                                </div>
+                            </div>
+                            <button class="btn btn-success" onclick="getProducts()">
+                                📦 Obtener Productos
+                            </button>
+                            <div id="response-products" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Create Product -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/products</code>
+                            <span class="badge bg-danger">👑 Admin</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Crear nuevo producto (solo administradores)</p>
+                            <textarea class="form-control mb-2" id="create-product-body" rows="8">{
+  "name": "Nuevo Producto",
+  "description": "Descripción del producto",
+  "sku": "PROD-001",
+  "price": 99.99,
+  "inventory_quantity": 50,
+  "is_active": true
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/products', 'create-product-body')">
+                                ➕ Crear Producto
+                            </button>
+                            <div id="response-create-product" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Categories -->
+                <section id="categories">
+                    <h3>📂 Categorías</h3>
+
+                    <!-- Get Categories -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-GET">GET</span>
+                            <code>/products/categories</code>
+                        </div>
+                        <div class="card-body">
+                            <p>Obtener lista de categorías</p>
+                            <button class="btn btn-success" onclick="makeRequest('GET', '/products/categories')">
+                                📂 Obtener Categorías
+                            </button>
+                            <div id="response-products-categories" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Create Category -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/products/categories</code>
+                            <span class="badge bg-danger">👑 Admin</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Crear nueva categoría (solo administradores)</p>
+                            <textarea class="form-control mb-2" id="create-category-body" rows="6">{
+  "name": "Nueva Categoría",
+  "slug": "nueva-categoria",
+  "description": "Descripción de la categoría",
+  "is_active": true
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/products/categories', 'create-category-body')">
+                                ➕ Crear Categoría
+                            </button>
+                            <div id="response-create-category" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cart -->
+                <section id="cart">
+                    <h3>🛒 Carrito de Compras</h3>
+                    
+                    <!-- Get Cart -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-GET">GET</span>
+                            <code>/cart</code>
+                            <span class="badge bg-warning text-dark">🔒 Requiere Auth</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Obtener carrito del usuario</p>
+                            <button class="btn btn-success" onclick="makeRequest('GET', '/cart')">
+                                🛒 Ver Carrito
+                            </button>
+                            <div id="response-cart" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Add to Cart -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/cart/add</code>
+                            <span class="badge bg-warning text-dark">🔒 Requiere Auth</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Agregar producto al carrito</p>
+                            <textarea class="form-control mb-2" id="add-cart-body" rows="4">{
+  "product_id": "ID_DEL_PRODUCTO",
+  "quantity": 2
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/cart/add', 'add-cart-body')">
+                                ➕ Agregar al Carrito
+                            </button>
+                            <div id="response-add-cart" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Orders -->
+                <section id="orders">
+                    <h3>📋 Pedidos</h3>
+
+                    <!-- Get Orders -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-GET">GET</span>
+                            <code>/orders</code>
+                            <span class="badge bg-warning text-dark">🔒 Requiere Auth</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Obtener pedidos del usuario</p>
+                            <button class="btn btn-success" onclick="makeRequest('GET', '/orders')">
+                                📋 Ver Mis Pedidos
+                            </button>
+                            <div id="response-orders" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Create Order -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/orders</code>
+                            <span class="badge bg-warning text-dark">🔒 Requiere Auth</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Crear nuevo pedido desde el carrito</p>
+                            <textarea class="form-control mb-2" id="create-order-body" rows="12">{
+  "shipping_address": {
+    "first_name": "Juan",
+    "last_name": "Pérez",
+    "address_line_1": "Calle Principal 123",
+    "city": "Managua",
+    "state": "Managua",
+    "postal_code": "12345",
+    "country": "NI",
+    "phone": "+505 8888-8888"
+  },
+  "billing_address": {
+    "first_name": "Juan",
+    "last_name": "Pérez",
+    "address_line_1": "Calle Principal 123",
+    "city": "Managua",
+    "state": "Managua",
+    "postal_code": "12345",
+    "country": "NI"
+  },
+  "payment_method": "paypal",
+  "customer_notes": "Entregar después de las 5 PM"
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/orders', 'create-order-body')">
+                                📦 Crear Pedido
+                            </button>
+                            <div id="response-create-order" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PayPal Payments -->
+                <section id="payments">
+                    <h3>💳 Pagos con PayPal</h3>
+                    
+                    <!-- Create Payment -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/payments/create</code>
+                            <span class="badge bg-warning text-dark">🔒 Requiere Auth</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Crear pago con PayPal</p>
+                            <textarea class="form-control mb-2" id="payment-body" rows="7">{
+  "amount": 99.99,
+  "currency": "USD",
+  "return_url": "http://localhost:3000/success",
+  "cancel_url": "http://localhost:3000/cancel",
+  "description": "Pago de prueba"
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/payments/create', 'payment-body')">
+                                💳 Crear Pago PayPal
+                            </button>
+                            <div id="response-payment" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Execute Payment -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/payments/execute</code>
+                            <span class="badge bg-warning text-dark">🔒 Requiere Auth</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Ejecutar pago después de aprobación</p>
+                            <textarea class="form-control mb-2" id="execute-payment-body" rows="4">{
+  "payment_id": "PAYID-XXXXXXX",
+  "payer_id": "XXXXXXX"
+}</textarea>
+                            <button class="btn btn-primary" onclick="makeRequest('POST', '/payments/execute', 'execute-payment-body')">
+                                ✅ Ejecutar Pago
+                            </button>
+                            <div id="response-execute-payment" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Admin Section -->
+                <section id="admin">
+                    <h3>👑 Funciones de Administrador</h3>
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Nota:</strong> Estos endpoints requieren permisos de administrador
+                    </div>
+                    
+                    <!-- Refund Payment -->
+                    <div class="endpoint-card card">
+                        <div class="card-header">
+                            <span class="badge method-badge method-POST">POST</span>
+                            <code>/payments/refund</code>
+                            <span class="badge bg-danger">👑 Admin</span>
+                        </div>
+                        <div class="card-body">
+                            <p>Reembolsar pago PayPal</p>
+                            <textarea class="form-control mb-2" id="refund-body" rows="5">{
+  "sale_id": "SALE-XXXXXXX",
+  "amount": 50.00,
+  "currency": "USD"
+}</textarea>
+                            <button class="btn btn-warning" onclick="makeRequest('POST', '/payments/refund', 'refund-body')">
+                                💰 Reembolsar Pago
+                            </button>
+                            <div id="response-refund" class="response-area" style="display: none;"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
